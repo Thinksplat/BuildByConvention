@@ -36,6 +36,11 @@ Underscores can be used or not.  Camel case is likely used, but not required.
 you have a library directory named libHelper, then the test directory should be named testHelper.
 - The test directory will be automatically linked against the library it is testing.
 
+## Note on apps
+
+By default every lib will be linked to the app.  This can be overridden by using the .autobuild.yml file.  If there is an explicit link to a project
+library, then ONLY that library will be linked and the default linking will not occur.
+
 ## Expectations on tests
 
 - It is expected that for each library, there will be a corresponding test directory.
