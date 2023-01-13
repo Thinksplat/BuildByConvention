@@ -2,6 +2,8 @@
 
 cmake_minimum_required (VERSION 3.18.0)
 
+project(sample_project)
+
 # GoogleTest requires at least C++14
 set(CMAKE_CXX_STANDARD 14)
 
@@ -12,9 +14,12 @@ else()
   add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 endif()
 
-add_subdirectory(lib_Helper)
-add_subdirectory(app_Demo)
-add_subdirectory(test_Helper)
+add_subdirectory(build/build/lib_Helper)
+add_subdirectory(build/build/app_Demo)
+add_subdirectory(build/build/test_Helper)
+add_subdirectory(build/lib_Helper)
+add_subdirectory(build/app_Demo)
+add_subdirectory(build/test_Helper)
 
 include(FetchContent)
 FetchContent_Declare(

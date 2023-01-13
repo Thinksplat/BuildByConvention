@@ -21,7 +21,9 @@ fn is_dir(entry: &DirEntry) -> bool {
 }
 
 pub fn all_source_directories(root: &str) -> impl Iterator<Item = BuildDirInfo> {
-    all_directories(root).filter_map(|e| entry_to_builddirtype(&e))
+    all_directories(root)
+        .filter(ignore_dir)
+        .filter_map(|e| entry_to_builddirtype(&e))
 }
 
 fn all_directories(root: &str) -> impl Iterator<Item = DirEntry> {
@@ -115,6 +117,12 @@ fn prefix_to_dirtype(prefix: &str) -> Option<BuildDirType> {
         "prototype" => Option::Some(BuildDirType::Prototype),
         _ => Option::None,
     }
+}
+
+fn ignore_dir(entry: &DirEntry) -> bool {
+    let path = entry.path();
+
+    path.components().any(|c| c.as_os_str() == "build")
 }
 
 fn entry_to_builddirtype(entry: &DirEntry) -> Option<BuildDirInfo> {

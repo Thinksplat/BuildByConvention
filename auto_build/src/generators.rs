@@ -19,8 +19,7 @@ fn write_template(
     template_file: &path::Path,
     data: BTreeMap<&str, String>,
     path_to_write: &path::Path,
-) 
-{
+) {
     let template_contents =
         fs::read_to_string(template_file).expect("Could not read template file");
     // create the handlebars registry
@@ -40,11 +39,17 @@ fn write_template(
 fn write_template2(
     template_file: &path::Path,
     data: BTreeMap<&str, &[String]>,
+    str_replace: &[(&str, &str)],
     path_to_write: &path::Path,
-) 
-{
-    let template_contents =
+) {
+    let mut template_contents =
         fs::read_to_string(template_file).expect("Could not read template file");
+
+    // DO the str replaces first
+    for (from, to) in str_replace {
+        template_contents = template_contents.replace(from, to);
+    }
+
     // create the handlebars registry
     let mut handlebars = Handlebars::new();
     // register the template. The template string will be verified and compiled.
@@ -64,7 +69,21 @@ pub fn generate_lib(dir: &BuildDirInfo) {
     generate_template(template_file, dir);
 }
 
-pub fn generate_app(_dir: &DirEntry) {}
+pub fn generate_app(_dir: &DirEntry, dirs: &[String]) {}
+    let mut data = BTreeMap::new();
+
+    data.insert("LIBS", dirs);
+
+    let projectname = dir.file_name().unwrap().to_str().unwrap();
+
+    let replace = vec![("PROJECTNAME", projectname)];
+
+    let outpath = dir.join("CMakeLists.txt");
+    let template_file = path::Path::new("templates/top.CMakeFiles");
+
+    write_template2(template_file, data, replace.as_slice(), outpath.as_path());
+
+}
 
 pub fn generate_test(_dir: &DirEntry) {}
 
@@ -75,8 +94,12 @@ pub fn generate_main(dir: &path::Path, dirs: &[String]) {
 
     data.insert("DIRS", dirs);
 
+    let projectname = dir.file_name().unwrap().to_str().unwrap();
+
+    let replace = vec![("PROJECTNAME", projectname)];
+
     let outpath = dir.join("CMakeLists.txt");
     let template_file = path::Path::new("templates/top.CMakeFiles");
 
-    write_template2(template_file, data, outpath.as_path());
+    write_template2(template_file, data, replace.as_slice(), outpath.as_path());
 }

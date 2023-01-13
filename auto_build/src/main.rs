@@ -22,8 +22,9 @@ fn main() {
 
     println!("Building {}...", dir);
 
-    let mut dirs = vec![];
-    for source_dir in all_source_directories(&dir) {
+    let mut list_dirs = vec![];
+    println!("Generating lib dirs...");
+    for lib_dir in all_source_directories(&dir).filter(|d| d.kind == BuildDirType::Lib) {
         println!(
             "{} {:?} {}",
             source_dir.name,
@@ -31,18 +32,17 @@ fn main() {
             source_dir.entry.path().display()
         );
         let entry = &source_dir.entry;
+        generators::generate_lib(&lib_dir);
 
         let path_relative_to_dir = entry.path().strip_prefix(&dir).unwrap();
         let path_str = path_relative_to_dir.to_str().unwrap();
-        dirs.push(path_str.to_owned());
+        list_dirs.push(path_str.to_owned());
 
         match source_dir.kind {
             BuildDirType::Lib => {
                 generators::generate_lib(&source_dir);
             }
-            BuildDirType::App => {
-                generators::generate_app(entry);
-            }
+            BuildDirType::App => (),
             BuildDirType::Test => {
                 generators::generate_test(entry);
             }
@@ -51,5 +51,5 @@ fn main() {
             }
         }
     }
-    generators::generate_main(&dirpath, &dirs);
+    generators::generate_main(&dirpath, &list_dirs);
 }
