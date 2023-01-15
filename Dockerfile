@@ -7,10 +7,9 @@ WORKDIR /App/auto_build
 RUN cargo build --release
 
 # Build runtime image
-FROM alpine:latest
-WORKDIR /App
-COPY --from=build-env /App/auto_build/target/release/auto_build .
-COPY --from=build-env /App/auto_build/templates .
+FROM debian:buster-slim
+COPY ./auto_build/templates /App/templates/
+COPY --from=build-env /App/auto_build/target/release/auto_build /App
 
 WORKDIR /App
-ENTRYPOINT ["./auto_build","/project"]
+ENTRYPOINT ["/App/auto_build","/project"]
