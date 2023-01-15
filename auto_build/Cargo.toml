@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 walkdir = "2"
 handlebars = "4"
+negate = "0"

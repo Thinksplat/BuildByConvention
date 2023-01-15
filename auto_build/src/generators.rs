@@ -4,9 +4,9 @@ use std::fs;
 use std::path;
 use walkdir::DirEntry;
 
-use crate::builddir::BuildDirInfo;
+use crate::builddir::DirInfo;
 
-fn generate_template(template_file: &path::Path, for_dir: &BuildDirInfo) {
+fn generate_template(template_file: &path::Path, for_dir: &DirInfo) {
     let mut data = BTreeMap::new();
     data.insert("NAME", for_dir.name.to_owned());
 
@@ -64,24 +64,29 @@ fn write_template2(
     fs::write(path_to_write, result).expect("Could not write CMakeLists.txt");
 }
 
-pub fn generate_lib(dir: &BuildDirInfo) {
-    let template_file = path::Path::new("templates/lib.CMakeFiles");
-    generate_template(template_file, dir);
+pub struct LibData {
+    pub name : String
 }
 
-pub fn generate_app(_dir: &DirEntry, dirs: &[String]) {}
-    let mut data = BTreeMap::new();
+pub fn generate_lib(dir: &DirInfo) -> LibData {
+    let template_file = path::Path::new("templates/lib.CMakeFiles");
+    generate_template(template_file, dir);
+    LibData { name: dir.name.to_string() }
+}
 
-    data.insert("LIBS", dirs);
+pub fn generate_app(_dir: &DirEntry, _dirs: &[String]) {
+    // let mut data = BTreeMap::new();
 
-    let projectname = dir.file_name().unwrap().to_str().unwrap();
+    // data.insert("LIBS", dirs);
 
-    let replace = vec![("PROJECTNAME", projectname)];
+    // let projectname = dir.file_name().unwrap().to_str().unwrap();
 
-    let outpath = dir.join("CMakeLists.txt");
-    let template_file = path::Path::new("templates/top.CMakeFiles");
+    // let replace = vec![("PROJECTNAME", projectname)];
 
-    write_template2(template_file, data, replace.as_slice(), outpath.as_path());
+    // let outpath = dir.join("CMakeLists.txt");
+    // let template_file = path::Path::new("templates/top.CMakeFiles");
+
+    // write_template2(template_file, data, replace.as_slice(), outpath.as_path());
 
 }
 

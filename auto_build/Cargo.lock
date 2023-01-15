@@ -7,6 +7,7 @@ name = "auto_build"
 version = "0.1.0"
 dependencies = [
  "handlebars",
+ "negate",
  "walkdir",
 ]
 
@@ -97,6 +98,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "abb12e687cfb44aa40f41fc3978ef76448f9b6038cad6aef4259d3c095a2382e"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "negate"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3612a9b7ed84e54ee2c938c6866cfc5528274ceeef61e3008d23cc0f8c724e53"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
