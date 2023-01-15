@@ -2,7 +2,6 @@ use handlebars::Handlebars;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path;
-use walkdir::DirEntry;
 
 use crate::builddir::DirInfo;
 
@@ -74,7 +73,7 @@ pub fn generate_lib(dir: &DirInfo) -> LibData {
     LibData { name: dir.name.to_string() }
 }
 
-pub fn generate_app(_dir: &DirEntry, _dirs: &[String]) {
+pub fn generate_app(_dir: &DirInfo, _dirs: &[LibData]) {
     // let mut data = BTreeMap::new();
 
     // data.insert("LIBS", dirs);
@@ -90,9 +89,9 @@ pub fn generate_app(_dir: &DirEntry, _dirs: &[String]) {
 
 }
 
-pub fn generate_test(_dir: &DirEntry) {}
+pub fn generate_prototype(_dir: &DirInfo, _dirs: &[LibData]) {}
 
-pub fn generate_prototype(_dir: &DirEntry) {}
+pub fn generate_test(_dir: &DirInfo, _dirs: &[LibData]) {}
 
 pub fn generate_main(dir: &path::Path, dirs: &[String]) {
     let mut data = BTreeMap::new();

@@ -1,5 +1,6 @@
 use std::vec;
 
+use auto_build::builddir::all_exec_directories;
 use auto_build::builddir::all_lib_directories;
 use auto_build::builddir::BuildDirType;
 use auto_build::generators;
@@ -22,13 +23,31 @@ fn main() {
 
     println!("Building {}...", dir);
 
-    let mut lib_dirs = vec![];
+    let mut lib_data = vec![];
+    let mut all_dirs = vec![];
     println!("Generating lib dirs...");
     for lib_dir in all_lib_directories(&dir) {
         if let BuildDirType::Lib(info) = lib_dir {
             println!("{:?}", info);
             let libdata = generators::generate_lib(&info);
-            lib_dirs.push(libdata);
+            lib_data.push(libdata);
+            all_dirs.push(info.path().to_owned());
+        }
+    }
+
+    println!("Generating app,prototype,test dirs...");
+    for exec_dir in all_exec_directories(&dir) {
+        match exec_dir {
+            BuildDirType::App(info) => {
+                generators::generate_app(&info, &lib_data);
+            }
+            BuildDirType::Test(info) => {
+                generators::generate_test(&info, &lib_data);
+            }
+            BuildDirType::Prototype(info) => {
+                generators::generate_prototype(&info, &lib_data);
+            }
+            _ => (),
         }
     }
 

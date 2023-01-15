@@ -14,7 +14,12 @@ pub enum BuildDirType {
 #[derive(Debug)]
 pub struct DirInfo {
     pub name: String,
-    pub entry: DirEntry,
+    pub entry: DirEntry
+}
+impl DirInfo {
+    pub fn path(&self) -> &std::path::Path {
+        self.entry.path()
+    }
 }
 
 fn is_dir(entry: &DirEntry) -> bool {
