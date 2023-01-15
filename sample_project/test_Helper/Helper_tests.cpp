@@ -2,5 +2,5 @@
 #include "Helper.h"
 
 TEST(Helper, HelloString_ReturnsHelloWorld) {
-    EXPECT_STREQ(Hello::HelloString().c_str(), "Hello, World!");
+    EXPECT_STREQ(Helper::HelloString().c_str(), "Hello, World!");
 }

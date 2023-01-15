@@ -13,10 +13,10 @@ fn main() {
     }
     // directory is first argument
     let dir = std::env::args().nth(1).expect("No directory given");
-    let dirpath = std::path::Path::new(&dir);
+    let project_root = std::path::Path::new(&dir);
 
     // if dir is not a directory, stop
-    if !dirpath.is_dir() {
+    if !project_root.is_dir() {
         println!("{} is not a directory", dir);
         return;
     }
@@ -28,7 +28,6 @@ fn main() {
     println!("Generating lib dirs...");
     for lib_dir in all_lib_directories(&dir) {
         if let BuildDirType::Lib(info) = lib_dir {
-            println!("{:?}", info);
             let libdata = generators::generate_lib(&info);
             lib_data.push(libdata);
             all_dirs.push(info.path().to_owned());
@@ -39,17 +38,22 @@ fn main() {
     for exec_dir in all_exec_directories(&dir) {
         match exec_dir {
             BuildDirType::App(info) => {
-                generators::generate_app(&info, &lib_data);
+                generators::generate_app(project_root, &info, &lib_data);
+                all_dirs.push(info.path().to_owned());
             }
             BuildDirType::Test(info) => {
-                generators::generate_test(&info, &lib_data);
+                generators::generate_test(project_root, &info, &lib_data);
+                all_dirs.push(info.path().to_owned());
             }
             BuildDirType::Prototype(info) => {
-                generators::generate_prototype(&info, &lib_data);
+                generators::generate_prototype(project_root, &info, &lib_data);
+                all_dirs.push(info.path().to_owned());
             }
             _ => (),
         }
     }
+
+    generators::generate_main(project_root, all_dirs.as_slice());
 
     // Using the lib_dirs, generate the app, test, and prototype directories
     //for exec_dir in all_exec_directories()

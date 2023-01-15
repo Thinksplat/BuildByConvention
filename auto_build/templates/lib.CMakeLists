@@ -4,5 +4,5 @@ cmake_minimum_required (VERSION 3.18.0)
 
 FILE(GLOB SOURCES *.cpp)
 
-# Create a library called "{{NAME}}" which includes all source files in this directory
-add_library ({{NAME}} ${SOURCES})
+# Create a library called "LIB_NAME" which includes all source files in this directory
+add_library (LIB_NAME ${SOURCES})

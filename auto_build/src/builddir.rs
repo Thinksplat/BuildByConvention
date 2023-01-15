@@ -20,6 +20,9 @@ impl DirInfo {
     pub fn path(&self) -> &std::path::Path {
         self.entry.path()
     }
+    pub fn join(&self, path: &str) -> std::path::PathBuf {
+        self.entry.path().join(path)
+    }
 }
 
 fn is_dir(entry: &DirEntry) -> bool {

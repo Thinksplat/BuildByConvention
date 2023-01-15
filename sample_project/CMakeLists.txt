@@ -14,19 +14,17 @@ else()
   add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 endif()
 
-add_subdirectory(build/build/lib_Helper)
-add_subdirectory(build/build/app_Demo)
-add_subdirectory(build/build/test_Helper)
-add_subdirectory(build/lib_Helper)
-add_subdirectory(build/app_Demo)
-add_subdirectory(build/test_Helper)
-
 include(FetchContent)
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
   GIT_TAG release-1.12.1
 )
-FetchContent_MakeAvailable(googletest)
 
+FetchContent_MakeAvailable(googletest)
 enable_testing()
+
+add_subdirectory(lib_Helper)
+add_subdirectory(app_Demo)
+add_subdirectory(test_Helper)
+
