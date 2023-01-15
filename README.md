@@ -18,6 +18,8 @@ The expectation is that libraries will be built, applications will be built, pro
 
 # Directory Convention
 
+Conventions are by name and structure.  The following are the conventions:
+
 - Directories beginning with `lib` will be built as libraries.
 - Directories beginning with `app` will be built as applications.
 - Directories beginning with `test` will be built as tests.
@@ -29,6 +31,13 @@ Underscores can be used or not.  Camel case is likely used, but not required.
 - A directory libHelper is built as a library named Helper.
 - A directory lib_helper is built as a library named helper.
 - A directory lib_Helper is built as a library named Helper.
+
+# Overrides
+
+It's likely that more complex applications may need to link to other libraries or
+pull in other dependencies.  This can be done by creating a .autobuild.yml file.
+
+*Note:  The .autobuild.yml file is not yet implemented.*
   
 ## Note on tests
 
@@ -38,7 +47,7 @@ you have a library directory named libHelper, then the test directory should be 
 
 ## Note on apps
 
-By default every lib will be linked to the app.  This can be overridden by using the .autobuild.yml file.  If there is an explicit link to a project
+By default every lib will be linked to the app.  If there is an explicit override link to a project
 library, then ONLY that library will be linked and the default linking will not occur.
 
 ## Expectations on tests
@@ -59,3 +68,22 @@ Within each lib, app, or test directory, there is a special file named .autobuil
 - `lib` - A list of project libraries to link against.
   - If you link against an internal project library, an include 
 - `extlib` - A list of external libraries to link against.  
+
+# Running from Docker
+
+The easiest way to run this is to use the docker image.  The docker image is hosted on ghrc.io
+and can be run with the following command:
+
+```
+@username ➜ ~ $ docker run --rm -it -v /workspaces/BuildByConvention/sample_project:/project ghcr.io/thinksplat/buildbyconvention:main
+Building /project...
+Generating lib dirs...
+Writing to "/project/lib_Helper/CMakeLists.txt"
+Generating app,prototype,test dirs...
+Writing to "/project/app_Demo/CMakeLists.txt"
+Writing to "/project/test_Helper/CMakeLists.txt"
+Writing to "/project/CMakeLists.txt"
+```
+
+The ```-v``` option is used to mount the sample project into the docker container.  This should
+be replaced with the root path of your project.
