@@ -5,20 +5,38 @@ use auto_build::builddir::all_lib_directories;
 use auto_build::builddir::BuildDirType;
 use auto_build::generators;
 
-fn main() {
-    // if no argument given, print and exit
-    if std::env::args().len() < 2 {
-        println!("Usage: auto_build <directory>");
-        return;
+#[derive(Debug)]
+struct CustomError {
+    message: String,
+}
+impl CustomError {
+    fn new(message: &str) -> CustomError {
+        CustomError { message: message.to_string() }
     }
+}
+impl std::error::Error for CustomError {
+    fn description(&self) -> &str {
+        &self.message
+    }
+}
+impl std::fmt::Display for CustomError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "CustomError: {}", self.message)
+    }
+}
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // if no argument given, print and exit
+    let dir = std::env::args().nth(1).ok_or_else(|| {
+        CustomError::new("Usage: auto_build <directory>")
+    })?;
+
     // directory is first argument
-    let dir = std::env::args().nth(1).expect("No directory given");
     let project_root = std::path::Path::new(&dir);
 
     // if dir is not a directory, stop
     if !project_root.is_dir() {
-        println!("{} is not a directory", dir);
-        return;
+        return Err(CustomError::new("first argument is not a directory").into())
     }
 
     println!("Building {}...", dir);
@@ -76,4 +94,5 @@ fn main() {
     //     }
     // }
     // generators::generate_main(&dirpath, &list_dirs);
+    Ok(())
 }
