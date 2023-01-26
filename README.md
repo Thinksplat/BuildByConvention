@@ -75,7 +75,7 @@ The easiest way to run this is to use the docker image.  The docker image is hos
 and can be run with the following command:
 
 ```
-@username ➜ ~ $ docker run --rm -it -v /workspaces/BuildByConvention/sample_project:/project ghcr.io/thinksplat/buildbyconvention:main
+@username ➜ ~ $ docker run --rm -it -v `pwd`:/project ghcr.io/thinksplat/buildbyconvention:main
 Building /project...
 Generating lib dirs...
 Writing to "/project/lib_Helper/CMakeLists.txt"
